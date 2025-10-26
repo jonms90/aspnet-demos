@@ -1,6 +1,6 @@
 @AspNetDemos.API_HostAddress = https://localhost:44373
 
-GET {{AspNetDemos.API_HostAddress}}/weatherforecast
+GET {{AspNetDemos.API_HostAddress}}/v1/weatherforecast
 Accept: application/json
 
 ###

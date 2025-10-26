@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetDemos.API;
 
 [ApiController]
-[Route("[controller]")]
+[Route("v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = 
