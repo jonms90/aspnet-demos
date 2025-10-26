@@ -3,6 +3,7 @@
 namespace AspNetDemos.API
 {
     [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiController]
     public class ErrorController : ControllerBase
     {
         [Route("/error")]
