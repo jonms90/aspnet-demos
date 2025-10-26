@@ -4,3 +4,51 @@ GET {{AspNetDemos.API_HostAddress}}/v1/weatherforecast
 Accept: application/json
 
 ###
+
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{
+    "Id": "recipe-123",
+    "Name": "Simple Bread"
+}
+
+###
+
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{
+    "Id": "123",
+    "Name": "Simple Bread"
+}
+
+###
+
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{
+    "Id": 123,
+    "Name": "Simple Bread"
+}
+
+###
+
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{
+    "Id": "recipe-123"
+}
+
+###
+
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{
+    "Name": "Simple Bread"
+}
+
+###
