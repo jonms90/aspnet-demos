@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace AspNetDemos.API;
 
 [ApiController]
-[Route("v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
+[Route("v{version:apiVersion}/[controller]")]
 public class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = 
+    private static readonly string[] Summaries =
         ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
     [HttpGet(Name = "GetWeatherForecast")]
