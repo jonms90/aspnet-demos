@@ -25,7 +25,7 @@ builder.Services.AddControllers(options => {
         foreach (var key in pathKeys)
         {
             var entry = modelState[key];
-            var normalizedKey = key.Substring(2); // Remove "$."
+            var normalizedKey = key[2..]; // Remove "$."
             if (entry != null && !string.IsNullOrWhiteSpace(normalizedKey))
             {
                 if (modelState.ContainsKey(normalizedKey))
