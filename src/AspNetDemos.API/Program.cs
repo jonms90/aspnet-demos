@@ -24,15 +24,21 @@ builder.Services.AddControllers(options => {
         var pathKeys = modelState.Keys.Where(k => k.StartsWith("$.")).ToArray();
         foreach (var key in pathKeys)
         {
-            var entry = modelState[key];
-            var normalizedKey = key[2..]; // Remove "$."
-            if (entry != null && !string.IsNullOrWhiteSpace(normalizedKey))
+            // Use TryGetValue so the compiler understands we've checked for null,
+            // and to avoid an extra dictionary lookup / potential race between ContainsKey + indexer.
+            if (!modelState.TryGetValue(key, out var entry) || entry == null)
             {
-                if (modelState.ContainsKey(normalizedKey))
+                continue;
+            }
+
+            var normalizedKey = key[2..]; // Remove "$."
+            if (!string.IsNullOrWhiteSpace(normalizedKey))
+            {
+                if (modelState.ContainsKey(normalizedKey) && modelState[normalizedKey] is not null)
                 {
                     foreach (var error in entry.Errors)
                     {
-                        modelState[normalizedKey].Errors.Add(error);
+                        modelState[normalizedKey]!.Errors.Add(error);
                     }
                 }
                 else
