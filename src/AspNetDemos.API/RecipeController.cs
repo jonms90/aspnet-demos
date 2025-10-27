@@ -1,12 +1,13 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace AspNetDemos.API;
 
 [ApiController]
-[ApiVersion("1.0")]
 [Route("v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class RecipeController : ControllerBase
 {
     // POST <RecipeController>
@@ -23,6 +24,7 @@ public class NewRecipeRequest
 {
     [JsonConverter(typeof(RecipeIdConverter))]
     public required RecipeId Id { get; set; }
+    [StringLength(maximumLength: 50, MinimumLength = 3)]
     public required string Name { get; set; }
 }
 
