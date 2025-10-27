@@ -1,28 +1,37 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace AspNetDemos.API;
 
 [ApiController]
-[ApiVersion("1.0")]
 [Route("v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class RecipeController : ControllerBase
 {
     // POST <RecipeController>
     [HttpPost]
-    [Produces("application/problem+json")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] NewRecipeRequest request)
     {
-        // Process the valid recipe
-        return Ok();
+        // If we reach here, the model is valid and can be processed.
+        // For simplicity, we just return a Created response with the recipe details.
+        return CreatedAtRoute(null, new
+        {
+            id = request.Id.Value,
+            name = request.Name
+        });
     }
 }
 
 public class NewRecipeRequest
 {
-    [JsonConverter(typeof(RecipeIdConverter))]
-    public required RecipeId Id { get; set; }
-    public required string Name { get; set; }
+    [Required]
+    public RecipeId Id { get; set; } = default!;
+
+    [StringLength(maximumLength: 50, MinimumLength = 3)]
+    [Required]
+    public string Name { get; set; } = default!;
 }
 
