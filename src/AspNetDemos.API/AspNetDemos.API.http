@@ -51,3 +51,18 @@ Content-Type: application/json
 {
     "name": "Simple Bread"
 }
+
+### Empty request
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+
+### Empty request without Content-Type
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+
+### Empty JSON request
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{}
