@@ -1,10 +1,6 @@
 @AspNetDemos.API_HostAddress = https://localhost:44373
 
-GET {{AspNetDemos.API_HostAddress}}/v1/weatherforecast
-Accept: application/json
-
-###
-
+### Valid request
 POST {{AspNetDemos.API_HostAddress}}/v1/recipe
 Accept: application/json
 Content-Type: application/json
@@ -13,8 +9,7 @@ Content-Type: application/json
     "Name": "Simple Bread"
 }
 
-###
-
+### Too short Id
 POST {{AspNetDemos.API_HostAddress}}/v1/recipe
 Accept: application/json
 Content-Type: application/json
@@ -23,8 +18,7 @@ Content-Type: application/json
     "Name": "Simple Bread"
 }
 
-###
-
+### Id is number instead of string
 POST {{AspNetDemos.API_HostAddress}}/v1/recipe
 Accept: application/json
 Content-Type: application/json
@@ -33,8 +27,16 @@ Content-Type: application/json
     "Name": "Simple Bread"
 }
 
-###
+### Name too short
+POST {{AspNetDemos.API_HostAddress}}/v1/recipe
+Accept: application/json
+Content-Type: application/json
+{
+    "Id": "recipe-123",
+    "name": "Si"
+}
 
+### Name missing from request
 POST {{AspNetDemos.API_HostAddress}}/v1/recipe
 Accept: application/json
 Content-Type: application/json
@@ -42,13 +44,10 @@ Content-Type: application/json
     "Id": "recipe-123"
 }
 
-###
-
+### Id missing from request
 POST {{AspNetDemos.API_HostAddress}}/v1/recipe
 Accept: application/json
 Content-Type: application/json
 {
-    "Name": "Simple Bread"
+    "name": "Simple Bread"
 }
-
-###
