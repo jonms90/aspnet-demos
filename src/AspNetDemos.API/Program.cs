@@ -21,7 +21,7 @@ builder.Services.AddControllers(options => {
     {
         var modelState = context.ModelState;
         // Normalize JSON path keys like $.RecipeId to RecipeId
-        var pathKeys = modelState.Keys.Where(k => k.StartsWith("$.")).ToList();
+        var pathKeys = modelState.Keys.Where(k => k.StartsWith("$.")).ToArray();
         foreach (var key in pathKeys)
         {
             var entry = modelState[key];
@@ -45,7 +45,7 @@ builder.Services.AddControllers(options => {
             }
 
             // Remove the original key to avoid duplication
-            if(key != "$.") // Normalization of root key would result in empty string key and not duplication.
+            if (key != "$.") // Normalization of root key would result in empty string key and not duplication.
             {
                 modelState.Remove(key);
             }
