@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace AspNetDemos.API;
 
@@ -17,7 +16,8 @@ public class RecipeController : ControllerBase
     {
         // If we reach here, the model is valid and can be processed.
         // For simplicity, we just return a Created response with the recipe details.
-        return CreatedAtRoute(null, new { 
+        return CreatedAtRoute(null, new
+        {
             id = request.Id.Value,
             name = request.Name
         });
@@ -26,9 +26,11 @@ public class RecipeController : ControllerBase
 
 public class NewRecipeRequest
 {
-    [JsonConverter(typeof(RecipeIdConverter))]
-    public required RecipeId Id { get; set; }
+    [Required]
+    public RecipeId Id { get; set; }
+
     [StringLength(maximumLength: 50, MinimumLength = 3)]
-    public required string Name { get; set; }
+    [Required]
+    public string Name { get; set; }
 }
 
