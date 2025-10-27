@@ -5,43 +5,57 @@ namespace AspNetDemos.API
 {
     public class RecipeId
     {
-        public string Id { get; private set; }
-        public RecipeId(string id)
+        public string Value { get; }
+
+        private RecipeId(string value)
         {
-            if(id.Length < 5)
+            Value = value;
+        }
+
+        public static bool TryCreate(string? raw, out RecipeId? result, out string? error)
+        {
+            if (string.IsNullOrWhiteSpace(raw))
             {
-                throw new ArgumentException("RecipeId must be at least 5 characters long.", nameof(id));
+                result = null;
+                error = "RecipeId cannot be null or empty.";
+                return false;
             }
 
-            Id = id;
+            if (raw.Length < 5)
+            {
+                result = null;
+                error = "RecipeId must be at least 5 characters long.";
+                return false;
+            }
+
+            result = new RecipeId(raw);
+            error = null;
+            return true;
         }
+
+        public override string ToString() => Value;
     }
 
     public class RecipeIdConverter : JsonConverter<RecipeId>
     {
         public override RecipeId? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType == JsonTokenType.String)
+            if (reader.TokenType != JsonTokenType.String)
             {
-                string id = reader.GetString()!;
-                try
-                {
-                    return new RecipeId(id);
-                }
-                catch (ArgumentException)
-                {
-                    // Return null instead of throwing so the object can be created
-                    // and model validation will add a property-level error for Id.
-                    return null;
-                }
+                throw new JsonException("RecipeId must be a string.");
             }
 
-            // Non-string tokens are not valid for Id. Return null so validation will catch it.
-            return null;
+            string? raw = reader.GetString();
+            if(!RecipeId.TryCreate(raw, out RecipeId? valueObject, out string? error))
+            {
+                throw new JsonException(error);
+            }
+
+            return valueObject;
         }
         public override void Write(Utf8JsonWriter writer, RecipeId value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.Id);
+            writer.WriteStringValue(value.Value);
         }
     }
 }
