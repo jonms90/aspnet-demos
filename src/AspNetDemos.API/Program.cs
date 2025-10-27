@@ -24,8 +24,6 @@ builder.Services.AddControllers(options => {
         var pathKeys = modelState.Keys.Where(k => k.StartsWith("$.")).ToArray();
         foreach (var key in pathKeys)
         {
-            // Use TryGetValue so the compiler understands we've checked for null,
-            // and to avoid an extra dictionary lookup / potential race between ContainsKey + indexer.
             if (!modelState.TryGetValue(key, out var entry) || entry == null)
             {
                 continue;
@@ -34,11 +32,11 @@ builder.Services.AddControllers(options => {
             var normalizedKey = key[2..]; // Remove "$."
             if (!string.IsNullOrWhiteSpace(normalizedKey))
             {
-                if (modelState.ContainsKey(normalizedKey) && modelState[normalizedKey] is not null)
+                if (modelState.TryGetValue(normalizedKey, out var normalizedEntry) && normalizedEntry is not null)
                 {
                     foreach (var error in entry.Errors)
                     {
-                        modelState[normalizedKey]!.Errors.Add(error);
+                        normalizedEntry.Errors.Add(error);
                     }
                 }
                 else
@@ -51,7 +49,7 @@ builder.Services.AddControllers(options => {
             }
 
             // Remove the original key to avoid duplication
-            if (key != "$.") // Normalization of root key would result in empty string key and not duplication.
+            if (key != "$.") // Normalization of the root key would result in empty string key and not duplication.
             {
                 modelState.Remove(key);
             }
