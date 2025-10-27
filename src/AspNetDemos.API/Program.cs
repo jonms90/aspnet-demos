@@ -19,7 +19,39 @@ builder.Services.AddControllers(options => {
         // Standardize ValidationProblemDetails output for model validation errors
         options.InvalidModelStateResponseFactory = context =>
     {
-        var problemDetails = new ValidationProblemDetails(context.ModelState)
+        var modelState = context.ModelState;
+        // Normalize JSON path keys like $.RecipeId to RecipeId
+        var pathKeys = modelState.Keys.Where(k => k.StartsWith("$.")).ToList();
+        foreach (var key in pathKeys)
+        {
+            var entry = modelState[key];
+            var normalizedKey = key.Substring(2); // Remove "$."
+            if (entry != null && !string.IsNullOrWhiteSpace(normalizedKey))
+            {
+                if (modelState.ContainsKey(normalizedKey))
+                {
+                    foreach (var error in entry.Errors)
+                    {
+                        modelState[normalizedKey].Errors.Add(error);
+                    }
+                }
+                else
+                {
+                    foreach (var error in entry.Errors)
+                    {
+                        modelState.AddModelError(normalizedKey, error.ErrorMessage);
+                    }
+                }
+            }
+
+            // Remove the original key to avoid duplication
+            if(key != "$.") // Normalization of root key would result in empty string key and not duplication.
+            {
+                modelState.Remove(key);
+            }
+        }
+
+        var problemDetails = new ValidationProblemDetails(modelState)
         {
             Title = "One or more validation errors occurred.",
             Status = StatusCodes.Status400BadRequest,
