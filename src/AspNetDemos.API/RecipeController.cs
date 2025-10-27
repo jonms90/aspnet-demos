@@ -15,8 +15,12 @@ public class RecipeController : ControllerBase
     [Produces("application/problem+json")]
     public IActionResult Post([FromBody] NewRecipeRequest request)
     {
-        // Process the valid recipe
-        return Ok();
+        // If we reach here, the model is valid and can be processed.
+        // For simplicity, we just return a Created response with the recipe details.
+        return CreatedAtRoute(null, new { 
+            id = request.Id.Value,
+            name = request.Name
+        });
     }
 }
 
