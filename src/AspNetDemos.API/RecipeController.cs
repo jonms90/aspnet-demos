@@ -11,7 +11,8 @@ public class RecipeController : ControllerBase
 {
     // POST <RecipeController>
     [HttpPost]
-    [Produces("application/problem+json")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] NewRecipeRequest request)
     {
         // If we reach here, the model is valid and can be processed.
@@ -27,10 +28,10 @@ public class RecipeController : ControllerBase
 public class NewRecipeRequest
 {
     [Required]
-    public RecipeId Id { get; set; }
+    public RecipeId Id { get; set; } = default!;
 
     [StringLength(maximumLength: 50, MinimumLength = 3)]
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 }
 
